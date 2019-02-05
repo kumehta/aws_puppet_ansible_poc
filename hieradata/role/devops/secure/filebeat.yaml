@@ -50,11 +50,11 @@ profile::unix::files:
     owner:  '0'
     group:  '0'
     mode:   '0755'
-  /usr/share/logstash:
+  /usr/share/filebeat:
     ensure: 'link'
     owner:  '0'
     group:  '0'
-    target: '/app/logstash'
+    target: '/app/filebeat'
     require: File[/usr/share]
   /app/lib:
     ensure: 'directory'
@@ -71,12 +71,12 @@ profile::unix::files:
     owner:  '0'
     group:  '0'
     mode:   '0755'
-  /var/log/filebeat:
+  /app/log/filebeat:
     ensure: 'directory'
     owner:  'filebeat'
     group:  'filebeat'
     mode:   '2775'
-    require: File[/var/log]
+    require: File[/app/log]
 
 
 profile::unix::os::redhat::packages:
