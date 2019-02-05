@@ -28,7 +28,7 @@ hierarchy:
   - name: "Role specific data sources [5]"
     globs:
       - "role/%{::facts.devops_platform}/%{::facts.devops_func_env}/%{::facts.devops_sub_env}/%{::facts.devops_mc_role}/*.yaml"
-      - "role/devops/secure/*yaml"
+      - "role/devops/secure/*.yaml"
       
   - name: "Operating system specific data sources [4]"
     paths:
