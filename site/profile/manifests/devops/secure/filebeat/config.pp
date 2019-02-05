@@ -7,7 +7,7 @@
 #
 # -----------------------------------------------------------------------------
 
-class profile::devops::filebeat::config (
+class profile::devops::secure::filebeat::config (
   $config = undef,
   String $filebeat_owner,
   String $filebeat_group,
