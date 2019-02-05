@@ -7,7 +7,7 @@
 #
 # -----------------------------------------------------------------------------
 
-class profile::devops::filebeat::install (
+class profile::devops::secure::filebeat::install (
   $config = undef,
 ) {
 
