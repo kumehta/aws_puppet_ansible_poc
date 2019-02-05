@@ -1,0 +1,12 @@
+[Unit]
+Description=filebeat
+Documentation=https://www.elastic.co/guide/en/beats/filebeat/current/index.html
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/app/filebeat/bin/filebeat -c /etc/filebeat/filebeat.yml -path.home /app/filebeat -path.config /etc/filebeat -path.data /app/lib/filebeat -path.logs /app/log/filebeat
+Restart=always
+
+[Install]
+WantedBy=multi-user.target 

@@ -25,17 +25,9 @@ defaults:
 
 # Note! Paths are relative to ..datadir:..
 hierarchy:
-  - name: "Per-node data source [6]"
-    path: "node/%{::facts.devops_platform}/%{::facts.devops_func_env}/%{::trusted.certname}.yaml"
-
   - name: "Role specific data sources [5]"
     globs:
       - "role/%{::facts.devops_platform}/%{::facts.devops_func_env}/%{::facts.devops_sub_env}/%{::facts.devops_mc_role}/*.yaml"
-      - "role/%{::facts.devops_platform}/%{::facts.devops_func_env}/%{::facts.devops_sub_env}/%{::facts.devops_mc_role}.yaml"
-      - "role/%{::facts.devops_platform}/%{::facts.devops_func_env}/%{::facts.devops_mc_role}/*.yaml"
-      - "role/%{::facts.devops_platform}/%{::facts.devops_func_env}/%{::facts.devops_mc_role}.yaml"
-#     - "role/%{::facts.devops_platform}/%{::facts.devops_mc_role}/*.yaml"
-#     - "role/%{::facts.devops_platform}/%{::facts.devops_mc_role}.yaml"
 
   - name: "Operating system specific data sources [4]"
     paths:

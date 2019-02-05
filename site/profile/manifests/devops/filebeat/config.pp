@@ -1,8 +1,8 @@
 # -----------------------------------------------------------------------------
-# Author  = Kunal Mehta 
+# Author  = Kunal Mehta
 # Date    = 2019/01/30
 # Version = 1.0 'filebeat/config.pp'
-# Purpose = This is the 
+# Purpose = This is the
 #           'filebeat/config' profile.
 #
 # -----------------------------------------------------------------------------
@@ -31,19 +31,7 @@ class profile::devops::filebeat::config (
     command => "sed -i '1s/^/#${banner}\\n\\n/' ${filebeat_config_file}",
     unless  => "grep '${banner}' ${filebeat_config_file}",
   } ->
-  exec { "${filebeat_config_file} broker":
-    command     => "sed -i '23d' ${filebeat_config_file}",
-    refreshonly => true,
-    subscribe   => Exec[$filebeat_config_file],
-  } ->
-  file_line { "${filebeat_config_file} num_network_threads":
-    path    => "${filebeat_config_file}",
-    match   => "^num.network.threads",
-    line    => "num.network.threads=${num_network_threads}",
-    replace => true,
-    ensure  => present,
-  } ->
-  file {"/etc/systemd/system/filebeat.service":
+  file {"/etc/systemd/system/multi-user.target.wants/filebeat.service":
     mode    => '600',
     owner   => root,
     group   => root,

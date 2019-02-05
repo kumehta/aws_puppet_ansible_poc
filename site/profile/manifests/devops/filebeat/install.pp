@@ -11,15 +11,15 @@ class profile::devops::filebeat::install (
   $config = undef,
 ) {
 
-  $nexus_server  = hiera('profile::common::nexus')
-  $nexus_repo    = hiera('profile::devops::filebeat::install::nexus_repo')
+#  $nexus_server  = hiera('profile::common::nexus')
+#  $nexus_repo    = hiera('profile::devops::filebeat::install::nexus_repo')
   $filebeat_package = hiera('profile::devops::filebeat::install::package')
-  $download_dir  = hiera('profile::devops::filebeat::install::download_dir')
+  $download_dir     = hiera('profile::devops::filebeat::install::download_dir')
   $filebeat_dir     = hiera('profile::devops::filebeat::install::filebeat_dir')
 
   # Determine filebeat version to be installed (V.R.M.F).
-  $vrmf = "$filebeat_package".match(/[0-9]+[\.]+[0-9]+[\-]+[0-9]+[\.]+[0-9]+[\.]+[0-9]+/)
-  $filebeat_version = $vrmf[0]
+  #$vrmf = "$filebeat_package".match(/[0-9]+[\.]+[0-9]+[\-]+[0-9]+[\.]+[0-9]+[\.]+[0-9]+/)
+  #$filebeat_version = $vrmf[0]
 
   # Set the global execution path.
   Exec { path => ['/sbin', '/bin', '/usr/sbin', '/usr/bin'] }
@@ -27,7 +27,8 @@ class profile::devops::filebeat::install (
 
   exec { 'get_filebeat':
     cwd         => "${download_dir}",
-    command     => "wget ${nexus_server}/${nexus_repo}/${filebeat_package} && touch ${download_dir}/.puppet/get_filebeat.done",
+    #command     => "wget ${nexus_server}/${nexus_repo}/${filebeat_package} && touch ${download_dir}/.puppet/get_filebeat.done",
+    command     => "wget ${filebeat_package} && touch ${download_dir}/.puppet/get_filebeat.done",
     unless      => "test -e ${download_dir}/${filebeat_package}",
     timeout     => 12000,
     creates     => "${download_dir}/.puppet/get_filebeat.done"
