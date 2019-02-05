@@ -12,7 +12,7 @@ class profile::devops::secure::filebeat::config (
   String $filebeat_owner,
   String $filebeat_group,
   String $filebeat_config_file,
-  String $log_dirs,
+  String $log_dir,
 ) {
 
   # Set the global execution path_
