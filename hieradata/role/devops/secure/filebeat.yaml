@@ -2,7 +2,7 @@
 profile::unix::groups:
   'filebeat':
     ensure: 'present'
-    gid:    '1094'
+    gid:    '4000'
 
 profile::unix::groups::realize:
   - 'filebeat'
@@ -10,8 +10,8 @@ profile::unix::groups::realize:
 profile::unix::users:
   'filebeat':
     ensure:           'present'
-    uid:              '1009'
-    gid:              '1094'
+    uid:              '4000'
+    gid:              '4000'
     groups:           ['filebeat']
     shell:            '/sbin/nologin'
     home:             '/app/filebeat'
@@ -33,7 +33,7 @@ profile::unix::files:
     ensure: 'directory'
     owner:  'filebeat'
     group:  'filebeat'
-    mode:   '0755'
+    mode:   '2755'
     require: File[/app]
   /download:
     ensure: 'directory'
@@ -45,17 +45,22 @@ profile::unix::files:
     owner:  '0'
     group:  '0'
     mode:   '0755'
+  /etc:
+    ensure: 'directory'
+    owner: '0'
+    group: '0'
+    mode:  '0755'
+  /etc/filebeat:
+    ensure: 'directory'
+    owner: 'filebeat'
+    group: 'filebeat'
+    mode:  '0755'
+    require: File[/etc]
   /usr/share:
     ensure: 'directory'
     owner:  '0'
     group:  '0'
     mode:   '0755'
-  /usr/share/filebeat:
-    ensure: 'link'
-    owner:  '0'
-    group:  '0'
-    target: '/app/filebeat'
-    require: File[/usr/share]
   /app/lib:
     ensure: 'directory'
     owner:  '0'
@@ -91,7 +96,7 @@ profile::unix::os::redhat::packages:
 
 profile::devops::secure::filebeat::install::package: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.6.0-x86_64.rpm
 profile::devops::secure::filebeat::install::download_dir: /download
-profile::devops::secure::filebeat::install::filebeat_home_dir: /app/filebeat
+profile::devops::secure::filebeat::install::filebeat_dir: /app/filebeat
 
 ######filebeat Server Settings ##############################
 
@@ -102,4 +107,4 @@ profile::devops::secure::filebeat::config::filebeat_group: filebeat
 profile::devops::secure::filebeat::config::log_dir:  /app/log/filebeat
 profile::devops::secure::filebeat::config::data_dir: /app/lib/filebeat
 
-profile::devops::secure::filebeat::init_service_template: profile/devops/secure/filebeat.service.erb
+profile::devops::secure::filebeat::config::init_service_template: profile/devops/secure/filebeat.service.erb

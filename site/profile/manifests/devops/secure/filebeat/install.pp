@@ -13,9 +13,9 @@ class profile::devops::secure::filebeat::install (
 
 #  $nexus_server  = hiera('profile::common::nexus')
 #  $nexus_repo    = hiera('profile::devops::filebeat::install::nexus_repo')
-  $filebeat_package = hiera('profile::devops::filebeat::install::package')
-  $download_dir     = hiera('profile::devops::filebeat::install::download_dir')
-  $filebeat_dir     = hiera('profile::devops::filebeat::install::filebeat_dir')
+  $filebeat_package = hiera('profile::devops::secure::filebeat::install::package')
+  $download_dir     = hiera('profile::devops::secure::filebeat::install::download_dir')
+  $filebeat_dir     = hiera('profile::devops::secure::filebeat::install::filebeat_dir')
 
   # Determine filebeat version to be installed (V.R.M.F).
   #$vrmf = "$filebeat_package".match(/[0-9]+[\.]+[0-9]+[\-]+[0-9]+[\.]+[0-9]+[\.]+[0-9]+/)
@@ -47,13 +47,13 @@ class profile::devops::secure::filebeat::install (
    } ->
    exec { 'rm_filebeat_package':
      cwd        => "${download_dir}",
-     command    => "rm -rf ${filebeat_package} && touch ${download_dir}/.puppet/rm_filebeat_package.done",
+     command    => "rm -rf ${filebeat_package} /usr/share/filebeat && touch ${download_dir}/.puppet/rm_filebeat_package.done",
      timeout    => 1200,
      creates    => "${download_dir}/.puppet/rm_filebeat_package.done"
    }
    exec { 'change_ownership':
-    cwd         => "${filebeat_home_dir}",
-    command     => "chown -R filebeat:filebeat ${filebeat_home_dir}  && touch ${download_dir}/.puppet/change_filebeat_ownership.done",
+    cwd         => "${filebeat_dir}",
+    command     => "chown -R filebeat:filebeat ${filebeat_dir}  && touch ${download_dir}/.puppet/change_filebeat_ownership.done",
     creates     => "${download_dir}/.puppet/change_filebeat_ownership.done",
    }
 }

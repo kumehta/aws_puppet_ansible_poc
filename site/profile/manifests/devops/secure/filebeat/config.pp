@@ -13,6 +13,7 @@ class profile::devops::secure::filebeat::config (
   String $filebeat_group,
   String $filebeat_config_file,
   String $log_dir,
+  String $init_service_template,
 ) {
 
   # Set the global execution path_
@@ -23,24 +24,24 @@ class profile::devops::secure::filebeat::config (
   # Patch the filebeat server configuration file.
   file { "${filebeat_config_file}":
     ensure  => file,
-    owner   => "$filebeat_owner",
-    group   => "$filebeat_group",
-    mode    => "0660",
+    owner   => "0",
+    group   => "0",
+    mode    => "0644",
   } ->
   exec { "${filebeat_config_file}":
     command => "sed -i '1s/^/#${banner}\\n\\n/' ${filebeat_config_file}",
     unless  => "grep '${banner}' ${filebeat_config_file}",
   } ->
-  file {"/etc/systemd/system/multi-user.target.wants/filebeat.service":
-    mode    => '600',
+  file {"/usr/lib/systemd/system/filebeat.service":
+    mode    => '644',
     owner   => root,
     group   => root,
     backup  => false,
-    content => template($filebeat_start_template),
+    content => template($init_service_template),
   } ->
   exec { "Enable filebeat":
     command => 'systemctl daemon-reload ; systemctl enable filebeat',
-    unless  => 'test -f /etc/systemd/system/multi-user.target.wants/filebeat.service',
+    unless  => 'test -f /usr/lib/systemd/system/filebeat.service',
   } ->
   service { "(Re)start filebeat":
     name      => "filebeat",
