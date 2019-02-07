@@ -1,0 +1,111 @@
+# Docker DevOps/Secure.
+---
+
+profile::unix::groups:
+  'docker':
+    ensure: 'present'
+    gid:    '52499'
+
+profile::unix::groups::realize:
+  - 'docker'
+
+profile::unix::users:
+  'docker':
+    ensure:           'present'
+    uid:              '52499'
+    gid:              '52499'
+    groups:           ['docker']
+    shell:            '/usr/sbin/nologin'
+    home:             '/app/docker'
+    managehome:       false
+    password_max_age: '-1'
+    password_min_age: '-1'
+    password:         '!'
+
+profile::unix::users::realize:
+  - 'docker'
+
+profile::unix::files:
+  /app:
+    ensure:  'directory'
+    owner:   '0'
+    group:   '0'
+    mode:    '0755'
+  /app/docker:
+    ensure:  'directory'
+    owner:   'docker'
+    group:   'docker'
+    mode:    '0711'
+    require: File[/app]
+
+profile::unix::execs:
+  'setperm:/app/docker':
+    command:   '/bin/chown docker:docker /app/docker && /bin/chmod 0711 /app/docker'
+    unless:    '/usr/bin/stat -c "%U:%G:%a" /app/docker | /bin/grep "docker:docker:711"'
+    require:
+      - 'User[docker]'
+      - 'Group[docker]'
+#   subscribe: 'Mount[/app/docker]'
+
+# System Parameter Settings.
+profile::unix::os::redhat::sysctl:
+  kernel.pid_max:
+    value: '120000'
+  kernel.sem:
+    value: '500 256000 250 1024'
+  kernel.threads-max:
+    value: '32768'
+  fs.file-max:
+    value: '524288'
+  net.ipv4.tcp_keepalive_time:
+    value: '300'
+
+profile::unix::os::redhat::packages:
+  'curl':
+    ensure: latest
+  'device-mapper-persistent-data':
+    ensure: latest
+  'git':
+    ensure: latest
+  'java-1.8.0-openjdk':
+    ensure: latest
+  'java-1.8.0-openjdk-devel':
+    ensure: latest
+  'java-1.8.0-openjdk-headless':
+    ensure: latest
+  'libcgroup':
+    ensure: latest
+  'lvm2':
+    ensure: latest
+  'libtool-ltdl':
+    ensure: latest
+  'libseccomp':
+    ensure: latest
+  'policycoreutils-python':
+    ensure: latest
+  'python':
+    ensure: latest
+  'selinux-policy':
+    ensure: latest
+  'selinux-policy-targeted':
+    ensure: latest
+  'sudo':
+    ensure: latest
+  'wget':
+    ensure: latest
+  'yum-utils':
+    ensure: latest
+
+profile::generic::docker::install::git_repo:
+profile::generic::docker::install::packages:
+  - container-selinux-2.68-1.el7.noarch.rpm
+  - docker-ce-18.06.1.ce-3.el7.x86_64.rpm
+profile::generic::docker::install::git_software_repo:
+profile::generic::docker::install::files:
+  - docker-compose-1.22.0-Linux-x86_64
+
+profile::generic::docker::config::owner:                  docker
+profile::generic::docker::config::group:                  docker
+profile::generic::docker::config::docker_dir:             /app/docker
+profile::generic::docker::config::firewalld_add_ports:
+  - '8080/tcp'
