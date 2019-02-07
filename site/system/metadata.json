@@ -1,0 +1,17 @@
+{
+  "name": "erwbgy-system",
+  "version": "999.999.999",
+  "author": "erwbgy",
+  "summary": "Manage Linux system resources and services from hiera configuration",
+  "license": "Apache License, Version 2.0",
+  "source": "https://github.com/voxpupuli/puppet-system",
+  "project_page": "https://github.com/voxpupuli/puppet-system",
+  "issues_url": "https://github.com/voxpupuli/puppet-system/issues",
+  "dependencies": [
+    {"name":"erwbgy/limits","version_requirement":">= 0.3.1"},
+    {"name":"erwbgy/ntp","version_requirement":">= 0.7.1"},
+    {"name":"domcleal/augeasproviders","version_requirement":">= 0.5.1"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 2.6.0"},
+    {"name":"puppetlabs/concat","version_requirement":">= 0.2.0"}
+  ]
+}

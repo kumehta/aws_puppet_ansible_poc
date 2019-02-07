@@ -2,7 +2,7 @@
 profile::unix::groups:
   'filebeat':
     ensure: 'present'
-    gid:    '1094'
+    gid:    '4000'
 
 profile::unix::groups::realize:
   - 'filebeat'
@@ -10,8 +10,8 @@ profile::unix::groups::realize:
 profile::unix::users:
   'filebeat':
     ensure:           'present'
-    uid:              '1009'
-    gid:              '1094'
+    uid:              '4000'
+    gid:              '4000'
     groups:           ['filebeat']
     shell:            '/sbin/nologin'
     home:             '/app/filebeat'
@@ -33,7 +33,7 @@ profile::unix::files:
     ensure: 'directory'
     owner:  'filebeat'
     group:  'filebeat'
-    mode:   '0755'
+    mode:   '2755'
     require: File[/app]
   /download:
     ensure: 'directory'
@@ -45,28 +45,43 @@ profile::unix::files:
     owner:  '0'
     group:  '0'
     mode:   '0755'
+  /etc:
+    ensure: 'directory'
+    owner: '0'
+    group: '0'
+    mode:  '0755'
+  /etc/filebeat:
+    ensure: 'directory'
+    owner: 'filebeat'
+    group: 'filebeat'
+    mode:  '0755'
+    require: File[/etc]
   /usr/share:
     ensure: 'directory'
     owner:  '0'
     group:  '0'
     mode:   '0755'
-  /usr/share/logstash:
-    ensure: 'link'
-    owner:  '0'
-    group:  '0'
-    target: '/app/logstash'
-    require: File[/usr/share]
-  /var/log:
+  /app/lib:
     ensure: 'directory'
     owner:  '0'
     group:  '0'
     mode:   '0755'
-  /var/log/filebeat:
+  /app/lib/filebeat:
+    ensure: 'directory'
+    owner:  'filebeat'
+    group:  'filebeat'
+    mode:   '2755'
+  /app/log:
+    ensure: 'directory'
+    owner:  '0'
+    group:  '0'
+    mode:   '0755'
+  /app/log/filebeat:
     ensure: 'directory'
     owner:  'filebeat'
     group:  'filebeat'
     mode:   '2775'
-    require: File[/var/log]
+    require: File[/app/log]
 
 
 profile::unix::os::redhat::packages:
@@ -79,18 +94,17 @@ profile::unix::os::redhat::packages:
   'sudo':
     ensure: latest
 
-profile::devops::filebeat::install::nexus_repo: SOFTWARE-RHEL
-profile::devops::filebeat::install::package: ''
-profile::devops::filebeat::install::download_dir: /download
-profile::devops::filebeat::install::filebeat_home_dir: /app/filebeat
+profile::devops::secure::filebeat::install::package: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-6.6.0-x86_64.rpm
+profile::devops::secure::filebeat::install::download_dir: /download
+profile::devops::secure::filebeat::install::filebeat_dir: /app/filebeat
 
 ######filebeat Server Settings ##############################
 
-profile::devops::filebeat::config::filebeat_config_file: /etc/filebeat/filebeat.yml
-profile::devops::filebeat::config::filebeat_owner: filebeat
-profile::devops::filebeat::config::filebeat_group: filebeat
+profile::devops::secure::filebeat::config::filebeat_config_file: /etc/filebeat/filebeat.yml
+profile::devops::secure::filebeat::config::filebeat_owner: filebeat
+profile::devops::secure::filebeat::config::filebeat_group: filebeat
 
-profile::devops::filebeat::config::log_dir:  /var/log/filebeat
-profile::devops::filebeat::config::data_dir: /var/lib/filebeat
+profile::devops::secure::filebeat::config::log_dir:  /app/log/filebeat
+profile::devops::secure::filebeat::config::data_dir: /app/lib/filebeat
 
-profile::devops::filebeat::init_service_template: profile/devops/secure/filebeat.service.erb
+profile::devops::secure::filebeat::config::init_service_template: profile/devops/secure/filebeat.service.erb
