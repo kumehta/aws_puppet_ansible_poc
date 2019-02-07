@@ -13,8 +13,8 @@ class role::devops::filebeat {
   class { profile::unix:   } ->
 
   # Assign filebeat application profiles.
-  class { profile::devops::filebeat::install:    stage => 'setup_app'  }
-  class { profile::devops::filebeat::config:     stage => 'deploy_app' }
+  class { profile::devops::secure::filebeat::install:    stage => 'setup_app'  }
+  class { profile::devops::secure::filebeat::config:     stage => 'deploy_app' }
 
 }
 
