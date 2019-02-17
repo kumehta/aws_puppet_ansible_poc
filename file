@@ -1,0 +1,17 @@
+# =============================================================================
+# Defined Custom Facts: Devops                      [Giant]
+# -----------------------------------------------------------------------------
+# Fact:              Description:                  Options: (Case sensative)
+# -----------------  ----------------------------  ----------------------------
+# %{::devops_platform}  Platform.                     platform_name.
+# %{::devops_func_env}  Functional Environment.       production, preproduction,
+#                                                     integration, development.
+# %{::devops_sub_env}   Operational Environment.      dev, st, cob, mig, sit, sup.
+# %{::devops_dc_loc}    Data Centre Location.         acp, bbp, lbg.
+# %{::devops_mc_role}   Designated Machine Role.      esbb, esbo, fms, ftg, mqgw,
+#                                                     mqhub, nfs, oracle_db,
+#                                                     oracle_dg, mqs, iib.
+# =============================================================================
+
+
+This is File
